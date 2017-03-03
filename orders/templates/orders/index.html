@@ -1,0 +1,13 @@
+{% extends 'orders/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h1>New Order</h1>
+    <i>For pre-picked blueberries, in 10 pound bags.</i><br><br>
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
+
+{% endblock %}

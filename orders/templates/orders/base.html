@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Morning Shade Farm</title>
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/morningshade.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{%  static 'favicon.ico' %}"/>
+    </head>
+    <body>
+        <div class="page-header">
+            <center><h1>Morning Shade Farm</h1></center>
+        </div>
+
+        <div class="content container">
+
+
+            <div class="row">
+                <div class="col-md-8">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    <img src="{% static 'the_farm.jpg' %}">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
