@@ -24,6 +24,9 @@ class OrderAdmin(TotalsumAdmin):
     list_filter = ['status', ('pickup_date', DateRangeFilter)]
     ordering = ['pickup_date', '-quantity']
     actions = [fulfill_order, cancel_order]
-    list_display = ('status', 'pickup_date', 'requester_name', 'requester_email','quantity')
+    list_display = (
+        'status', 'pickup_date', 'quantity', 'requester_name', 'requester_email',
+        'requester_phone_number', 'comments'
+    )
 
 admin.site.register(Order, OrderAdmin)

@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 def multiple_of_ten(value):
@@ -18,10 +19,12 @@ class Order(models.Model):
         ('FULFILLED', 'Fulfilled'),
         ('CANCELED', 'Canceled'),
     )
-    pickup_date = models.DateField()
+    pickup_date = models.DateTimeField()
     quantity = models.IntegerField(validators=[multiple_of_ten, greater_than_zero])
     requester_name = models.CharField(max_length=128)
     requester_email = models.CharField(max_length=128)
+    requester_phone_number = PhoneNumberField(blank=True)
+    comments = models.TextField(blank=True)
     status = models.CharField(
         choices=STATUS_CHOICES, max_length=128, default="PENDING")
 
