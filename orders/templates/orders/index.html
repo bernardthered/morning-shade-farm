@@ -2,12 +2,30 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+    <div class="col-sm-6">
+        <h1>Farm Info</h1>
+        <a href="https://goo.gl/maps/a6u7WQRRvqu">
+            8345 S. Barnards Rd.<br>
+            Canby, OR 97013
+        </a><br>
+        <a href="tel:503-651-2622">503-651-2622</a><br>
+        <br>
+        <b>Open Dates and Hours</b><br>
+        U-pick vegetables and fruit:<br>
+        June 2-Oct 10<br>
+        8am-3pm Tues-Sun <i>(I just made this up)</i><br>
+        <br>
+        Berry plant sales by appointment all year<br>
+    </div>
 
-    <h1>New Order</h1>
-    <i>For pre-picked blueberries, in 10 pound bags.</i><br><br>
-    <form method="POST" class="post-form">
-        {% csrf_token %}
-        {% crispy form %}
-    </form>
+    <div class="col-sm-6">
+
+        <h1>New Order</h1>
+        <i>For pre-picked blueberries, in 10 pound bags.</i><br><br>
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
+    </div>
 
 {% endblock %}
