@@ -28,3 +28,4 @@ class Order(models.Model):
     def __str__(self):
         return "{} order for {} pounds on {} for {}".format(
             self.status.capitalize(), self.quantity, self.pickup_date, self.requester_name)
+    description = property(__str__)

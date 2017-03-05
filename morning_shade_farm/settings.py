@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'orders',
     'crispy_forms',
+    'totalsum',
+    'rangefilter',
+    'django_csv_exports',
 ]
 
 MIDDLEWARE_CLASSES = [
