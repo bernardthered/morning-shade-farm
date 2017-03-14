@@ -25,7 +25,7 @@ class OrderAdmin(TotalsumAdmin, ImportExportActionModelAdmin):
     ordering = ['pickup_date', '-quantity']
     actions = [fulfill_order, cancel_order]
     list_display = (
-        'status', 'pickup_date', 'quantity', 'total_cost', 'requester_name', 'requester_email',
+        'status', 'pickup_date', 'quantity', 'requester_name',
         'requester_phone_number', 'comments'
     )
 

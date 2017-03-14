@@ -19,7 +19,7 @@
 
         <h1>Prices</h1>
         <b>For U-Pick Blueberries</b><br>
-        $2.70 per pound.
+        $1.60 per pound.
         <br><br>
         <b>For Pre-Picked Blueberries</b><br>
         {% for price in prices %}
@@ -29,7 +29,7 @@
 
     <div class="col-sm-6">
         <h1>New Order</h1>
-        <i>For pre-picked blueberries, in 10 pound bags.</i><br><br>
+        <i>For pre-picked blueberries, in 10 pound bags, for pickup at the farm.</i><br><br>
         <form method="POST" class="post-form">
             {% csrf_token %}
             {% crispy form %}

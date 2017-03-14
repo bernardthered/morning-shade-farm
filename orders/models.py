@@ -6,7 +6,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 def multiple_of_ten(value):
     if value % 10 != 0:
-        raise ValidationError('{} is not a multiple of 10.'.format(value))
+        raise ValidationError(
+            'The berries are sold in 10 pound bags, {} is not a multiple of 10.'.format(value))
 
 
 def greater_than_zero(value):
