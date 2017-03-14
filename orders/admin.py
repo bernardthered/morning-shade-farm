@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export.admin import ImportExportActionModelAdmin
 from rangefilter.filter import DateRangeFilter
 from totalsum.admin import TotalsumAdmin
 
@@ -15,7 +16,7 @@ def cancel_order(modeladmin, request, queryset):
 cancel_order.short_description = "Mark selected orders as canceled"
 
 
-class OrderAdmin(TotalsumAdmin):
+class OrderAdmin(TotalsumAdmin, ImportExportActionModelAdmin):
     totalsum_list = ('quantity', 'total_cost')
 
     exclude = []

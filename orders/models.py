@@ -34,8 +34,13 @@ class Order(models.Model):
         return super(Order, self).save(*args, **kwargs)
 
     def get_cost_per_pound(self):
-        #cost_per_pound = getattr(Price.objects.first(), "cost_per_pound", 0)
-        # get the first (lowest) price object which this # of pounds qualifies for
+        """
+        :return: a Decimal of the cost per pound of berries that this order qualifies for,
+        based on its quantity.
+        """
+        # Get the first (lowest) price object which this # of pounds qualifies for. The first
+        # object will be the highest minimum (and presumably the lowest price) because the Price
+        # objects are ordered descending by min quantity
         price = Price.objects.filter(min_quantity__lte=self.quantity).first()
         return price.cost_per_pound
 

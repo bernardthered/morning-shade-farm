@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'totalsum',
     'rangefilter',
-    'django_csv_exports',
+    'import_export',
 ]
 
 MIDDLEWARE_CLASSES = [

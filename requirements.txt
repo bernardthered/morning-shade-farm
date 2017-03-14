@@ -1,11 +1,12 @@
 appdirs==1.4.2
 Babel==2.3.4
+diff-match-patch==20121119
 dj-database-url==0.4.1
 Django==1.10.4
 django-admin-rangefilter==0.2.1
 django-bootstrap3-datetimepicker-2==2.4.2
 django-crispy-forms==1.6.1
-django-csv-exports==1.0.3
+django-import-export==0.5.1
 django-phonenumber-field==1.1.0
 gunicorn==19.6.0
 packaging==16.8
@@ -14,5 +15,6 @@ psycopg2==2.6.2
 pyparsing==2.1.10
 pytz==2016.10
 six==1.10.0
+tablib==0.11.4
 twentytab-totalsum-admin==0.8
 whitenoise==3.2
