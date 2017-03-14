@@ -1,0 +1,10 @@
+{% extends 'orders/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>{{ pagetitle }}</h1>
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
+{% endblock %}

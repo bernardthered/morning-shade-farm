@@ -1,4 +1,6 @@
 import datetime
+import uuid
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
@@ -38,6 +40,7 @@ class Order(models.Model):
         ('FULFILLED', 'Fulfilled'),
         ('CANCELED', 'Canceled'),
     )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     pickup_date = models.DateField(validators=[after_yesterday, is_during_the_season,])
     quantity = models.IntegerField(validators=[multiple_of_ten, greater_than_zero])
     requester_name = models.CharField(max_length=128)

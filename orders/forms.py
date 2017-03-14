@@ -20,7 +20,7 @@ class OrderForm(forms.ModelForm):
             'pickup_date',
             'comments',)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, submit_button_name="Submit", **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['requester_name'].label = "Your full name"
         self.fields['requester_email'].label = "Your email address"
@@ -36,7 +36,7 @@ class OrderForm(forms.ModelForm):
             self.fields['requester_name'].initial = "Charles Reid"
             self.fields['requester_email'].initial = "creid@example.com"
             self.fields['requester_phone_number'].initial = "5035555678"
-            self.fields['pickup_date'].initial = "03/20/2017"
+            self.fields['pickup_date'].initial = "06/20/2017"
 
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
@@ -44,4 +44,4 @@ class OrderForm(forms.ModelForm):
         self.helper.form_class = 'form-inline'
         self.helper.field_template = 'bootstrap3/layout/inline_field.html'
         self.helper.layout = Layout(*self.fields.keys())
-        self.helper.add_input(Submit('submit', 'Submit'))
+        self.helper.add_input(Submit('submit', submit_button_name))
