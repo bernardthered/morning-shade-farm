@@ -1,4 +1,4 @@
-from django.utils import timezone
+import datetime
 from django.core.exceptions import ValidationError
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
@@ -15,9 +15,22 @@ def greater_than_zero(value):
         raise ValidationError('{} is not greater than 0.'.format(value))
 
 
-def after_now(value):
-    if value < timezone.now():
-        raise ValidationError("The date & time cannot be in the past.")
+def after_yesterday(value):
+    if value < datetime.date.today():
+        raise ValidationError("The pickup date cannot be in the past.")
+
+
+def is_during_the_season(value):
+    this_year = datetime.datetime.today().year
+    start_of_season = datetime.date(year=this_year, month=6, day=1)
+    end_of_season = datetime.date(year=this_year, month=9, day=30)
+
+    if value < start_of_season:
+        raise ValidationError("The pick up season starts June 1st.")
+
+    if value > end_of_season:
+        raise ValidationError("The pick up season ends Sept 15th.")
+
 
 class Order(models.Model):
     STATUS_CHOICES = (
@@ -25,7 +38,7 @@ class Order(models.Model):
         ('FULFILLED', 'Fulfilled'),
         ('CANCELED', 'Canceled'),
     )
-    pickup_date = models.DateTimeField(validators=[after_now,])
+    pickup_date = models.DateField(validators=[after_yesterday, is_during_the_season,])
     quantity = models.IntegerField(validators=[multiple_of_ten, greater_than_zero])
     requester_name = models.CharField(max_length=128)
     requester_email = models.CharField(max_length=128)
@@ -33,7 +46,7 @@ class Order(models.Model):
     comments = models.TextField(blank=True)
     status = models.CharField(
         choices=STATUS_CHOICES, max_length=128, default="PENDING")
-    total_cost = models.DecimalField(max_digits=16, decimal_places=2)
+    total_cost = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.total_cost = self.quantity * self.get_cost_per_pound()

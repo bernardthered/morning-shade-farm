@@ -14,9 +14,8 @@ def index(request):
             order.save()  # just to calculate & store the price
 
             msg = 'Your order for {} pounds of blueberries for ${} has been received. You can ' \
-                  'pick them up after {} on {} at Morning Shade Farm.'.format(
-                order.quantity, order.total_cost, order.pickup_date.time(),
-                order.pickup_date.date(),
+                  'pick them up after 9am on {} at Morning Shade Farm.'.format(
+                order.quantity, order.total_cost, order.pickup_date,
             )
             if order.quantity >= 200:
                 msg += " If you have additional requests, please call the farm."

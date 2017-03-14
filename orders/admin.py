@@ -26,8 +26,9 @@ class OrderAdmin(TotalsumAdmin, ImportExportActionModelAdmin):
     actions = [fulfill_order, cancel_order]
     list_display = (
         'status', 'pickup_date', 'quantity', 'requester_name',
-        'requester_phone_number', 'comments'
+        'requester_phone_number', 'comments',
     )
+    readonly_fields = ['total_cost',]
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Price)

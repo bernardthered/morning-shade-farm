@@ -2,6 +2,7 @@ from bootstrap3_datetime.widgets import DateTimePicker
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout
 from django import forms
+from django.conf import settings
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 from .models import Order
@@ -27,11 +28,15 @@ class OrderForm(forms.ModelForm):
         self.fields['quantity'].label = "Number of pounds of blueberries"
         self.fields['requester_phone_number'].widget = PhoneNumberInternationalFallbackWidget(
             region='us')
-        # self.fields['quantity'].initial = 1000
-        # self.fields['pickup_date'].initial = "03/10/2017"
-
         self.fields['pickup_date'].widget = \
-            DateTimePicker(options={"format": "MM/DD/YYYY HH:mm"})
+            DateTimePicker(options={"format": "MM/DD/YYYY"})
+
+        if settings.DEBUG:
+            self.fields['quantity'].initial = 1000
+            self.fields['requester_name'].initial = "Charles Reid"
+            self.fields['requester_email'].initial = "creid@example.com"
+            self.fields['requester_phone_number'].initial = "5035555678"
+            self.fields['pickup_date'].initial = "03/20/2017"
 
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
