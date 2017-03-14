@@ -27,8 +27,33 @@ class Order(models.Model):
     comments = models.TextField(blank=True)
     status = models.CharField(
         choices=STATUS_CHOICES, max_length=128, default="PENDING")
+    total_cost = models.DecimalField(max_digits=16, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.total_cost = self.quantity * self.get_cost_per_pound()
+        return super(Order, self).save(*args, **kwargs)
+
+    def get_cost_per_pound(self):
+        #cost_per_pound = getattr(Price.objects.first(), "cost_per_pound", 0)
+        # get the first (lowest) price object which this # of pounds qualifies for
+        price = Price.objects.filter(min_quantity__lte=self.quantity).first()
+        return price.cost_per_pound
 
     def __str__(self):
         return "{} order for {} pounds on {} for {}".format(
             self.status.capitalize(), self.quantity, self.pickup_date, self.requester_name)
     description = property(__str__)
+
+
+class Price(models.Model):
+    """
+    """
+    # eventually can add a FK to which product this is for
+    cost_per_pound = models.DecimalField(max_digits=8, decimal_places=2)
+    min_quantity = models.IntegerField()
+
+    class Meta:
+        ordering = ["-min_quantity"]
+
+    def __str__(self):
+        return "{} per lb. for orders over {} lbs.".format(self.cost_per_pound, self.min_quantity)

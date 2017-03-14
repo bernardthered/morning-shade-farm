@@ -19,13 +19,20 @@
     </div>
 
     <div class="col-sm-6">
-
         <h1>New Order</h1>
         <i>For pre-picked blueberries, in 10 pound bags.</i><br><br>
         <form method="POST" class="post-form">
             {% csrf_token %}
             {% crispy form %}
         </form>
+    </div>
+
+    <div class="col-sm-6">
+        <h1>Prices</h1>
+        <i>For pre-picked blueberries.</i><br><br>
+        {% for price in prices %}
+            For {{ price.min_quantity }} pounds and up: ${{ price.cost_per_pound }} per pound.<br>
+        {% endfor %}
     </div>
 
 {% endblock %}
