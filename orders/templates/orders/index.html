@@ -16,6 +16,15 @@
         8am-3pm Tues-Sun <i>(I just made this up)</i><br>
         <br>
         Berry plant sales by appointment all year<br>
+
+        <h1>Prices</h1>
+        <b>For U-Pick Blueberries</b><br>
+        $2.70 per pound.
+        <br><br>
+        <b>For Pre-Picked Blueberries</b><br>
+        {% for price in prices %}
+            For {{ price.min_quantity }} pounds and up: ${{ price.cost_per_pound }} per pound.<br>
+        {% endfor %}
     </div>
 
     <div class="col-sm-6">
@@ -25,14 +34,6 @@
             {% csrf_token %}
             {% crispy form %}
         </form>
-    </div>
-
-    <div class="col-sm-6">
-        <h1>Prices</h1>
-        <i>For pre-picked blueberries.</i><br><br>
-        {% for price in prices %}
-            For {{ price.min_quantity }} pounds and up: ${{ price.cost_per_pound }} per pound.<br>
-        {% endfor %}
     </div>
 
 {% endblock %}

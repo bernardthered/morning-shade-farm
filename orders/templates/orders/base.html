@@ -26,29 +26,22 @@
             <center><h1>Morning Shade Farm</h1></center>
         </div>
 
+        <center>
+            <img src="{% static 'blueberries.jpg' %}">
+        </center>
+
         <div class="content container">
-
-
             <div class="row">
-                <div class="col-md-8">
-
-                    <img src="{% static 'the_farm.jpg' %}">
-                    <br>
-                    <br>
-
-                    <div class="row">
-                        {% if messages %}
-                        <ul class="messages">
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-                    {% block content %}
-                    {% endblock %}
-                </div>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
+            {% block content %}
+            {% endblock %}
         </div>
     </body>
 </html>

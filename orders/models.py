@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
@@ -13,13 +14,17 @@ def greater_than_zero(value):
         raise ValidationError('{} is not greater than 0.'.format(value))
 
 
+def after_now(value):
+    if value < timezone.now():
+        raise ValidationError("The date & time cannot be in the past.")
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('PENDING', 'Pending'),
         ('FULFILLED', 'Fulfilled'),
         ('CANCELED', 'Canceled'),
     )
-    pickup_date = models.DateTimeField()
+    pickup_date = models.DateTimeField(validators=[after_now,])
     quantity = models.IntegerField(validators=[multiple_of_ten, greater_than_zero])
     requester_name = models.CharField(max_length=128)
     requester_email = models.CharField(max_length=128)
