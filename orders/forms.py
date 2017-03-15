@@ -24,7 +24,7 @@ class OrderForm(forms.ModelForm):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['requester_name'].label = "Your full name"
         self.fields['requester_email'].label = "Your email address"
-        self.fields['requester_phone_number'].label = "Your phone number (optional)"
+        self.fields['requester_phone_number'].label = "Your phone number"
         self.fields['quantity'].label = "Number of pounds of blueberries"
         self.fields['requester_phone_number'].widget = PhoneNumberInternationalFallbackWidget(
             region='us')
