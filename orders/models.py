@@ -9,7 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 def multiple_of_ten(value):
     if value % 10 != 0:
         raise ValidationError(
-            'The berries are sold in 10 pound bags, {} is not a multiple of 10.'.format(value))
+            'The berries are sold in 10 pound bags, please enter a multiple of 10.')
 
 
 def greater_than_zero(value):
@@ -24,11 +24,11 @@ def after_yesterday(value):
 
 def is_during_the_season(value):
     this_year = datetime.datetime.today().year
-    start_of_season = datetime.date(year=this_year, month=6, day=1)
-    end_of_season = datetime.date(year=this_year, month=9, day=30)
+    start_of_season = datetime.date(year=this_year, month=6, day=17)
+    end_of_season = datetime.date(year=this_year, month=9, day=15)
 
     if value < start_of_season:
-        raise ValidationError("The pick up season starts June 1st.")
+        raise ValidationError("The pick up season starts June 17th.")
 
     if value > end_of_season:
         raise ValidationError("The pick up season ends Sept 15th.")
@@ -37,7 +37,7 @@ def is_during_the_season(value):
 class Order(models.Model):
     STATUS_CHOICES = (
         ('PENDING', 'Pending'),
-        ('FULFILLED', 'Fulfilled'),
+        ('FILLED', 'Filled'),
         ('CANCELED', 'Canceled'),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

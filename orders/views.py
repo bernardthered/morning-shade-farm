@@ -19,7 +19,7 @@ def index(request):
                 order.quantity, order.total_cost, order.pickup_date,
             )
             if order.quantity >= 200:
-                msg += " If you have additional requests, please call the farm."
+                msg += " If you have additional requests, please add comments to your order or call us."
 
             messages.success(request, msg)
             return redirect('index')

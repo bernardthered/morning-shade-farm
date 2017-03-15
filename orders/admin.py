@@ -7,8 +7,8 @@ from .models import Order, Price
 
 
 def fulfill_order(modeladmin, request, queryset):
-    queryset.update(status='FULFILLED')
-fulfill_order.short_description = "Mark selected orders as fulfilled"
+    queryset.update(status='FILLED')
+fulfill_order.short_description = "Mark selected orders as filled"
 
 
 def cancel_order(modeladmin, request, queryset):
