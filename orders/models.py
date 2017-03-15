@@ -24,6 +24,9 @@ def after_yesterday(value):
 
 def is_during_the_season(value):
     this_year = datetime.datetime.today().year
+    if value.year != this_year:
+        raise ValidationError("Orders are only allowed for {}.".format(this_year))
+
     start_of_season = datetime.date(year=this_year, month=6, day=17)
     end_of_season = datetime.date(year=this_year, month=9, day=15)
 
