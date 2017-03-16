@@ -44,6 +44,8 @@ class Order(models.Model):
         ('CANCELED', 'Canceled'),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    create_date = models.DateTimeField(default=datetime.datetime.now)
+    last_updated = models.DateTimeField(default=datetime.datetime.now)
     pickup_date = models.DateField(validators=[after_yesterday, is_during_the_season,])
     quantity = models.IntegerField(validators=[multiple_of_ten, greater_than_zero])
     requester_name = models.CharField(max_length=128)
@@ -56,6 +58,7 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         self.total_cost = self.quantity * self.get_cost_per_pound()
+        self.last_updated = datetime.datetime.now()
         return super(Order, self).save(*args, **kwargs)
 
     def get_cost_per_pound(self):
