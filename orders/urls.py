@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^orders/upcoming$', views.upcoming, name='upcoming'),
     url(r'^orders/(?P<order_id>[0-9a-f\-]+)/$', views.order_detail, name='order_detail'),
 ]

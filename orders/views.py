@@ -1,5 +1,7 @@
+import datetime
 from django.conf.urls import url
 from django.contrib import messages
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -16,6 +18,27 @@ def index(request):
         return form
     prices = Price.objects.all().order_by('min_quantity')
     return render(request, 'orders/index.html', {'form': form, 'prices': prices})
+
+
+def upcoming(request):
+    # TODO: restrict to logged in users/admins
+    day_totals = []
+    cur_date = datetime.datetime.today()
+    # for the next 100 days
+    for i in range(100):
+        day_total = {}
+        the_days_orders = Order.objects.filter(pickup_date=cur_date)
+        quant = the_days_orders.aggregate(Sum('quantity'))['quantity__sum']
+        if not quant:
+            quant = 0
+        day_total['date'], _ = str(cur_date).split(maxsplit=1)
+        day_total['date_str'] = cur_date.strftime('%a %b %d')
+        day_total['total_quantity'] = "{} pounds".format(quant)
+        day_total['num_orders'] = the_days_orders.count()
+        day_total['num_rejected_orders'] = the_days_orders.filter(status='REJECTED').count()
+        day_totals.append(day_total)
+        cur_date += datetime.timedelta(days=1)
+    return render(request, 'orders/upcoming.html', {'day_totals': day_totals})
 
 
 def order_detail(request, order_id):

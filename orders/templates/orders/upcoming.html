@@ -1,0 +1,16 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+    <h1>Upcoming Orders</h1>
+    <i>For the next 100 days:</i>
+    <ul>
+        {% for day in day_totals %}
+            <li><a href="/admin/orders/order/?&pickup_date__gte={{ day.date }}&pickup_date__lte={{ day.date }}">
+                {{ day.date_str }}: {{ day.total_quantity }} in {{ day.num_orders }} orders
+                {% if day.num_rejected_orders %}
+                    (including {{ day.num_rejected_orders }} rejected orders)
+                {% endif %}
+            </a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
