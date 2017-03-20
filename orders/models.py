@@ -79,8 +79,6 @@ class Order(models.Model):
 
 
 class Price(models.Model):
-    """
-    """
     # eventually can add a FK to which product this is for
     cost_per_pound = models.DecimalField(max_digits=8, decimal_places=2)
     min_quantity = models.IntegerField()
@@ -90,3 +88,27 @@ class Price(models.Model):
 
     def __str__(self):
         return "{} per lb. for orders over {} lbs.".format(self.cost_per_pound, self.min_quantity)
+
+
+class DailyLimit(models.Model):
+    limit = models.IntegerField()
+    # When date is null, it is the global default limit
+    # TODO: also enforce uniqueness of the null date
+    date = models.DateField(null=True, blank=True, unique=True,
+                            help_text="If left blank, this will be the default limit for all days.")
+
+    @staticmethod
+    def get_limit_for_date(date):
+        limit_for_date = DailyLimit.objects.filter(date=date).first()
+        if limit_for_date:
+            return limit_for_date.limit
+        global_limit = DailyLimit.objects.filter(date=None).first()
+        if global_limit:
+            return global_limit.limit
+        return None
+
+    def __str__(self):
+        if not self.date:
+            return "Default daily limit: {} pounds".format(self.limit)
+        return "{} pound limit on {}".format(self.limit, self.date)
+

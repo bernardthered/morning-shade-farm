@@ -3,7 +3,7 @@ from import_export.admin import ImportExportActionModelAdmin
 from rangefilter.filter import DateRangeFilter
 from totalsum.admin import TotalsumAdmin
 
-from .models import Order, Price
+from .models import Order, Price, DailyLimit
 
 
 def fulfill_order(modeladmin, request, queryset):
@@ -32,3 +32,4 @@ class OrderAdmin(TotalsumAdmin, ImportExportActionModelAdmin):
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Price)
+admin.site.register(DailyLimit)

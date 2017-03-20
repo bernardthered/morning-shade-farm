@@ -3,9 +3,10 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout
 from django import forms
 from django.conf import settings
+from django.db.models import Sum
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
-from .models import Order
+from .models import Order, DailyLimit
 
 
 class OrderForm(forms.ModelForm):
@@ -45,3 +46,31 @@ class OrderForm(forms.ModelForm):
         self.helper.field_template = 'bootstrap3/layout/inline_field.html'
         self.helper.layout = Layout(*self.fields.keys())
         self.helper.add_input(Submit('submit', submit_button_name))
+
+    def clean(self):
+        pickup_date = self.cleaned_data.get('pickup_date')
+        quantity = self.cleaned_data.get('quantity')
+
+        if self.instance:
+            # use the difference as the quantity to check. Ie. if they are going from 20 to 100
+            # lbs, make sure an additional 80 would not exceed the limit
+            if self.instance.pickup_date == pickup_date:
+                quantity = quantity - self.instance.quantity
+                if quantity <= 0:
+                    # They are not changing the date, and the quantity is either the same or a
+                    # decrease, so let them do this (even if it's still over the limit for the day)
+                    return super(OrderForm, self).clean()
+        limit = DailyLimit.get_limit_for_date(pickup_date)
+        if not limit:
+            return super(OrderForm, self).clean()
+        already_requested = \
+            Order.objects.filter(pickup_date=pickup_date).aggregate(Sum('quantity'))[
+                'quantity__sum']
+        overage = (already_requested + quantity) - limit
+        if overage > 0:
+            raise forms.ValidationError(
+                "This order would put the total requests for {} {} pounds over the limit".format(
+                    pickup_date, overage,
+                )
+            )
+        return super(OrderForm, self).clean()
