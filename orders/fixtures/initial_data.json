@@ -1,0 +1,1 @@
+[{"model": "orders.price", "pk": 1, "fields": {"cost_per_pound": "2.20", "min_quantity": 10}}, {"model": "orders.price", "pk": 2, "fields": {"cost_per_pound": "2.00", "min_quantity": 100}}, {"model": "orders.price", "pk": 3, "fields": {"cost_per_pound": "1.80", "min_quantity": 1000}}, {"model": "orders.dailylimit", "pk": 1, "fields": {"limit": 1000, "date": null}}]
