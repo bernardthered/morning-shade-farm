@@ -35,7 +35,7 @@ def upcoming(request):
             quant = 0
         day_total['date'], _ = str(cur_date).split(maxsplit=1)
         daily_limit = DailyLimit.get_limit_for_date(cur_date)
-        day_total['limit'] = "Limit: {} pounds".format(daily_limit.limit)
+        day_total['limit'] = "Limit: {} pounds".format(daily_limit)
         day_total['date_str'] = cur_date.strftime('%a %b %d')
         day_total['total_quantity'] = "{} pounds".format(quant)
         day_total['num_orders'] = the_days_orders.count()
