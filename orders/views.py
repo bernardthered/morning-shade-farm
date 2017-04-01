@@ -85,7 +85,8 @@ def process_form(request, order=None, submit_button_name="Submit", creating_new=
             # them here. Other errors it does not display, so we need to add a message to the
             # page with those.
             non_global_errors = copy.copy(form.errors)
-            del(non_global_errors["__all__"])
+            if "__all__" in non_global_errors:
+                del(non_global_errors["__all__"])
             if non_global_errors:
                 msg = mark_safe("The form has errors: {}".format(non_global_errors))
                 messages.add_message(request, messages.constants.ERROR, msg, extra_tags='danger')

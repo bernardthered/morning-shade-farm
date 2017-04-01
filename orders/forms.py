@@ -65,7 +65,7 @@ class OrderForm(forms.ModelForm):
             return super(OrderForm, self).clean()
         already_requested = \
             Order.objects.filter(pickup_date=pickup_date).aggregate(Sum('quantity'))[
-                'quantity__sum']
+                'quantity__sum'] or 0
         overage = (already_requested + quantity) - limit
         if overage > 0:
             raise forms.ValidationError(
