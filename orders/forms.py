@@ -32,7 +32,7 @@ class OrderForm(forms.ModelForm):
         self.fields['pickup_date'].widget = \
             DateTimePicker(options={"format": "MM/DD/YYYY"})
 
-        if settings.DEBUG:
+        if settings.DEBUG and False:
             self.fields['quantity'].initial = 1000
             self.fields['requester_name'].initial = "Charles Reid"
             self.fields['requester_email'].initial = "creid@example.com"
