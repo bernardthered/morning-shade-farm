@@ -3,6 +3,7 @@ import datetime
 import copy
 from django.conf.urls import url
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render, redirect
@@ -61,6 +62,37 @@ def order_detail(request, order_id):
     })
 
 
+def email_order_info(request, order):
+    body = """
+    We'll see you for your berry pickup on {}!
+    
+    You can <a href={}>see, update, and cancel your order here</a>.
+    
+    Quantity (in pounds): {}
+    Cost: {}
+    
+    Thanks for your order!
+    Morning Shade Farm
+    """.format(
+        order.pretty_date,
+        request.build_absolute_uri(location=reverse('order_detail', args=[order.id])),
+        order.quantity,
+        order.total_cost,
+    )
+
+    try:
+        send_mail(
+            '{} lbs of berries will be ready on {}'.format(order.quantity, order.pretty_date),
+            body,
+            'noreply@morningshadefarm.com',
+            [order.requester_email],
+            fail_silently=False,
+        )
+        messages.info(request, "Details have been emailed to {}".format(order.requester_email))
+    except Exception as err:
+        messages.error(request, "Unable to send email: {}".format(err))
+
+
 def process_form(request, order=None, submit_button_name="Submit", creating_new=False):
     if request.method == "POST":
         form = OrderForm(request.POST, instance=order, submit_button_name=submit_button_name)
@@ -70,7 +102,7 @@ def process_form(request, order=None, submit_button_name="Submit", creating_new=
 
             msg = 'Your order for {} pounds of blueberries for ${} has been received. You can ' \
                   'pick them up after 9am on {} at Morning Shade Farm.'.format(
-                   order.quantity, order.total_cost, order.pickup_date.strftime("%a %b %d"),
+                   order.quantity, order.total_cost, order.pretty_date,
             )
             if order.quantity >= 200:
                 msg += " If you have additional requests, please add comments to your order or call us."
@@ -80,6 +112,9 @@ def process_form(request, order=None, submit_button_name="Submit", creating_new=
                     reverse('order_detail', args=[order.id]))
 
             messages.success(request, mark_safe(msg))
+
+            if creating_new:
+                email_order_info(request, order)
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
             # The bootstrap inline form displays global errors automatically, so we will remove

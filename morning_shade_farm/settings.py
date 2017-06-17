@@ -26,6 +26,9 @@ SECRET_KEY = "zwji@(qg-f%lkrmdo6_%5fe1t00&fzb9gyb*)mgj%zkg2c0py2"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# if DEBUG:
+#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Allow all host headers
 ALLOWED_HOSTS = [
     '127.0.0.1', 'localhost',

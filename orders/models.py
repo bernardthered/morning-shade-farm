@@ -72,6 +72,10 @@ class Order(models.Model):
         price = Price.objects.filter(min_quantity__lte=self.quantity).first()
         return price.cost_per_pound
 
+    @property
+    def pretty_date(self):
+        return self.pickup_date.strftime("%a %b %d")
+
     def __str__(self):
         return "{} order for {} pounds on {} for {}".format(
             self.status.capitalize(), self.quantity, self.pickup_date, self.requester_name)
