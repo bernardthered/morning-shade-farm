@@ -29,7 +29,7 @@ DEBUG = True
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'morningshadefarm@gmail.com'
-EMAIL_HOST_PASSWORD = 'REDACTED'
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 587
 
 # Allow all host headers
