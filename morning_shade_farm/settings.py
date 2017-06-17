@@ -29,6 +29,7 @@ DEBUG = True
 # Allow all host headers
 ALLOWED_HOSTS = [
     '127.0.0.1', 'localhost',
+    'morningshadefarm.herokuapp.com',
     'www.morningshadefarm.com', 'morningshadefarm.com',
     'www.morningshade.farm', 'morningshade.farm']
 
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'totalsum',
     'rangefilter',
     'import_export',
+    'dynamic_preferences',
 
     # morningshadefarm apps
     'orders',
@@ -84,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'dynamic_preferences.processors.global_preferences',
             ],
             'debug': DEBUG,
         },

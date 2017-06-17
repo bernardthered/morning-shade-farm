@@ -4,25 +4,20 @@
 {% block content %}
     <div class="col-sm-6">
         <h1>Farm Info</h1>
-        <a href="https://goo.gl/maps/a6u7WQRRvqu">
-            8345 S. Barnards Rd.<br>
-            Canby, OR 97013
-        </a><br>
-        <a href="tel:503-651-2622">503-651-2622</a><br>
-        <br>
-        <b>Open Hours</b><br>
-        U-pick vegetables and fruit: 8am-4pm Wed-Sun<br>
-        Pre-picked pickup: 9am-4pm all days<br>
-        Berry plant sales by appointment all year<br>
+        {{ global_preferences.farm_info|safe }}
 
         <h1>Prices</h1>
-        <b>For U-Pick Blueberries</b><br>
-        $1.60 per pound.
+        {{ global_preferences.prices|safe }}
         <br><br>
         <b>For Pre-Picked Blueberries</b><br>
         {% for price in prices %}
             For {{ price.min_quantity }} pounds and up: ${{ price.cost_per_pound }} per pound.<br>
         {% endfor %}
+
+        {% if global_preferences.about_message %}
+            <h1>About</h1>
+            {{ global_preferences.about_message|safe }}
+        {% endif %}
     </div>
 
     <div class="col-sm-6">
