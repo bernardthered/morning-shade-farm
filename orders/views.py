@@ -1,12 +1,12 @@
 import datetime
 
 import copy
-from django.conf.urls import url
+from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
@@ -66,7 +66,7 @@ def email_order_info(request, order):
     body = """
     We'll see you for your berry pickup on {}!
     
-    You can <a href={}>see, update, and cancel your order here</a>.
+    You can see, update, and cancel your order here: {}
     
     Quantity (in pounds): {}
     Cost: {}
@@ -84,7 +84,7 @@ def email_order_info(request, order):
         send_mail(
             '{} lbs of berries will be ready on {}'.format(order.quantity, order.pretty_date),
             body,
-            'noreply@morningshadefarm.com',
+            settings.EMAIL_HOST_USER,
             [order.requester_email],
             fail_silently=False,
         )
