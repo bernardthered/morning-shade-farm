@@ -1,4 +1,4 @@
-from dynamic_preferences.types import LongStringPreference
+from dynamic_preferences.types import LongStringPreference, IntPreference
 from dynamic_preferences.registries import global_preferences_registry
 
 # Generally, these messages should not be changed here, and instead should be changed in the
@@ -36,3 +36,14 @@ class AboutMessage(LongStringPreference):
 <p>Our nursery is open now Fri & Sat 9-5 and by appointment for 23 varieties of blueberries 
 and other berry plants in 1, 3, 7, 10 and 25 gallon containers. Call 503-730-4788 for nursery 
 sales. Check or cash and bring your mud boots.'''
+
+
+@global_preferences_registry.register
+class SeasonStartDay(IntPreference):
+    name = 'season_start_day'
+    default = 24
+
+@global_preferences_registry.register
+class SeasonEndDay(IntPreference):
+    name = 'season_end_day'
+    default = 15

@@ -3,6 +3,7 @@ import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from dynamic_preferences.registries import global_preferences_registry
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -27,14 +28,18 @@ def is_during_the_season(value):
     if value.year != this_year:
         raise ValidationError("Orders are only allowed for {}.".format(this_year))
 
-    start_of_season = datetime.date(year=this_year, month=6, day=17)
-    end_of_season = datetime.date(year=this_year, month=9, day=15)
+    global_preferences = global_preferences_registry.manager()
+
+    start_day = global_preferences['season_start_day']
+    end_day = global_preferences['season_end_day']
+    start_of_season = datetime.date(year=this_year, month=6, day=start_day)
+    end_of_season = datetime.date(year=this_year, month=9, day=end_day)
 
     if value < start_of_season:
-        raise ValidationError("The pick up season starts June 17th.")
+        raise ValidationError("The pick up season starts June {}.".format(start_day))
 
     if value > end_of_season:
-        raise ValidationError("The pick up season ends Sept 15th.")
+        raise ValidationError("The pick up season ends Sept {}.".format(end_day))
 
 
 class Order(models.Model):
