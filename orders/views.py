@@ -4,7 +4,7 @@ import copy
 from django.conf.urls import url
 from django.contrib import messages
 from django.db.models import Sum
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -23,7 +23,8 @@ def index(request):
 
 
 def upcoming(request):
-    # TODO: restrict to logged in users/admins
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
     day_totals = []
     cur_date = datetime.datetime.today()
     # for the next 100 days

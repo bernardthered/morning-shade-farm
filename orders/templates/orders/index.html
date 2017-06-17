@@ -29,4 +29,14 @@
         </form>
     </div>
 
+    <div class="row">
+        {% if user.is_superuser %}
+            <center><p>
+                <i>Since you're logged in as an administrator: <br>
+                <a href="/admin">Admin Pages</a> |
+                <a href="/orders/upcoming">Upcoming Orders</a>
+                </i>
+            </p></center>
+        {% endif %}
+    </div>
 {% endblock %}
