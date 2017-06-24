@@ -31,7 +31,7 @@
         </center>
 
         <div class="content container">
-            <div class="row">
+            <div class="col-sm-10">
                 {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}
@@ -40,8 +40,30 @@
                 </ul>
                 {% endif %}
             </div>
+        </div>
+
+        <div class="content container">
             {% block content %}
             {% endblock %}
+
+            <div id="footer-links" class="row" style="font-size:large">
+                    <center><p>
+                        {% url 'index' as the_url %}
+                        {% if request.get_full_path != the_url %}
+                            <a href="/">Main Page</a> |
+                        {% endif %}
+
+                        <a href="https://www.tricountyfarm.org/farm/morning-shade-farm-and-berry-nursery">
+                            What's in Season</a> |
+                        <a href="https://www.facebook.com/Morning-Shade-Farm-116391798395040/">
+                            Facebook</a>
+                        {% if user.is_superuser %}
+                            | <a href="/admin">Admin Pages</a> |
+                            <a href="/orders/upcoming">Upcoming Orders</a>
+                        {% endif %}
+                        </i>
+                    </p></center>
+            </div>
         </div>
     </body>
 </html>
