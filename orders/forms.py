@@ -1,9 +1,10 @@
 from bootstrap3_datetime.widgets import DateTimePicker
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout
+from crispy_forms.layout import Button, Layout, Submit
 from django import forms
 from django.conf import settings
 from django.db.models import Sum
+from django.urls import reverse
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 from .models import Order, DailyLimit
@@ -21,7 +22,7 @@ class OrderForm(forms.ModelForm):
             'pickup_date',
             'comments',)
 
-    def __init__(self, *args, submit_button_name="Submit", **kwargs):
+    def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['requester_name'].label = "Your full name"
         self.fields['requester_email'].label = "Your email address"
@@ -45,7 +46,19 @@ class OrderForm(forms.ModelForm):
         self.helper.form_class = 'form-inline'
         self.helper.field_template = 'bootstrap3/layout/inline_field.html'
         self.helper.layout = Layout(*self.fields.keys())
-        self.helper.add_input(Submit('submit', submit_button_name))
+        order = kwargs.get('instance', None)
+        if order:
+            if order.status == "CANCELED":
+                for field_name in self.fields.keys():
+                    self.fields[field_name].widget.attrs['readonly'] = True
+            else:
+                self.helper.add_input(Button(
+                    'cancel', "Cancel Order", onclick="window.location.href='{}';".format(
+                    reverse('cancel_order', kwargs={"order_id":order.id}))))
+                self.helper.add_input(Submit('submit', "Update Order"))
+
+        else:
+            self.helper.add_input(Submit('submit', "Submit"))
 
     def clean(self):
         pickup_date = self.cleaned_data.get('pickup_date')

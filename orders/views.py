@@ -54,7 +54,7 @@ def upcoming(request):
 
 def order_detail(request, order_id):
     order = Order.objects.get(id=order_id)
-    form = process_form(request, order, submit_button_name="Update Order")
+    form = process_form(request, order)
     if isinstance(form, HttpResponseRedirect):
         # the form is not a form, but a redirect. Return that now.
         return form
@@ -63,6 +63,14 @@ def order_detail(request, order_id):
         'pagetitle': "Your {} Blueberry Order".format(order.status.capitalize(), order.id),
         'form': form,
     })
+
+
+def cancel_order(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order.status = 'CANCELED'
+    order.save()
+    messages.info(request, "Your order has been canceled.")
+    return HttpResponseRedirect(reverse('index'))
 
 
 def email_order_info(request, order):
@@ -95,9 +103,13 @@ def email_order_info(request, order):
         messages.error(request, "Unable to send email: {}".format(err))
 
 
-def process_form(request, order=None, submit_button_name="Submit", creating_new=False):
+def process_form(request, order=None, creating_new=False):
+    """
+    Called for generating the form initially, and processing it when submitted. Used by both the
+    main index page (for new orders), and the order details page (for changing an order).
+    """
     if request.method == "POST":
-        form = OrderForm(request.POST, instance=order, submit_button_name=submit_button_name)
+        form = OrderForm(request.POST, instance=order)
         if form.is_valid():
             order = form.save()
             order.save()  # just to calculate & store the price
@@ -129,5 +141,5 @@ def process_form(request, order=None, submit_button_name="Submit", creating_new=
                 msg = mark_safe("The form has errors: {}".format(non_global_errors))
                 messages.add_message(request, messages.constants.ERROR, msg, extra_tags='danger')
     else:
-        form = OrderForm(instance=order, submit_button_name=submit_button_name)
+        form = OrderForm(instance=order)
     return form
