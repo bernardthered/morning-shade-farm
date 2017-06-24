@@ -1,9 +1,10 @@
-import datetime
-
 import copy
+import datetime
+import os
+import sendgrid
+
 from django.conf import settings
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
@@ -12,6 +13,8 @@ from django.utils.safestring import mark_safe
 
 from orders.forms import OrderForm
 from orders.models import Price, Order, DailyLimit
+
+from sendgrid.helpers.mail import Email, Content, Mail
 
 
 def index(request):
@@ -80,15 +83,14 @@ def email_order_info(request, order):
         order.total_cost,
     )
 
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(settings.EMAIL_FROM_ADDRESS)
+    subject = '{} lbs of berries will be ready on {}'.format(order.quantity, order.pretty_date)
+    to_email = Email(order.requester_email)
+    content = Content("text/plain", body)
     try:
-        send_mail(
-            '{} lbs of berries will be ready on {}'.format(order.quantity, order.pretty_date),
-            body,
-            settings.EMAIL_HOST_USER,
-            [order.requester_email],
-            fail_silently=False,
-        )
-        messages.info(request, "Details have been emailed to {}".format(order.requester_email))
+        mail = Mail(from_email, subject, to_email, content)
+        sg.client.mail.send.post(request_body=mail.get())
     except Exception as err:
         messages.error(request, "Unable to send email: {}".format(err))
 

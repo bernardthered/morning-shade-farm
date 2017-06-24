@@ -33,8 +33,10 @@ psycopg2==2.7.1
 ptyprocess==0.5.1
 Pygments==2.2.0
 pyparsing==2.2.0
+python-http-client==2.3.0
 pytz==2017.2
 PyYAML==3.12
+sendgrid==4.2.0
 simplegeneric==0.8.1
 six==1.10.0
 tablib==0.11.5
