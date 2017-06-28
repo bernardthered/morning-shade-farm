@@ -16,12 +16,8 @@ import dj_database_url
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-EMAIL_FROM_ADDRESS = 'morningshadefarm@gmail.com'
-
-# SECURITY WARNING: keep the secret key used in production secret! It is popped from the environ
-# because we do not want it included in the error emails that Django sends (which include all env
-# vars)
-SECRET_KEY = os.environ.pop('SECRET_KEY')
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -29,8 +25,9 @@ ADMINS = [('Bernard', 'bernardthered@gmail.com')]
 
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'app64500666@heroku.com'
-EMAIL_HOST_PASSWORD =  os.environ.pop('SENDGRID_PASSWORD')
-SENDGRID_API_KEY = os.environ.pop('SENDGRID_API_KEY')
+EMAIL_HOST_PASSWORD =  os.environ['SENDGRID_PASSWORD']
+EMAIL_FROM_ADDRESS = 'morningshadefarm@gmail.com'
+SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
