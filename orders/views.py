@@ -70,10 +70,12 @@ def cancel_order(request, order_id):
     order.status = 'CANCELED'
     order.save()
     messages.info(request, "Your order has been canceled.")
+    email_canceled_order_notification(request, order)
     return HttpResponseRedirect(reverse('index'))
 
 
-def email_order_info(request, order):
+def email_new_order_info(request, order):
+    subject = "{} lbs of berries will be ready on {}".format(order.quantity, order.pretty_date)
     body = """
     We'll see you for your berry pickup on {}!
     
@@ -81,6 +83,7 @@ def email_order_info(request, order):
     
     Quantity (in pounds): {}
     Cost: {}
+    Order ID: {}
     
     Thanks for your order!
     Morning Shade Farm
@@ -89,16 +92,29 @@ def email_order_info(request, order):
         request.build_absolute_uri(location=reverse('order_detail', args=[order.id])),
         order.quantity,
         order.total_cost,
+        order.id,
     )
+    send_email(request, order.requester_email, subject, body)
 
+
+def email_canceled_order_notification(request, order):
+    subject = "Your order for {} lbs of berries has been canceled!".format(order.quantity)
+    body = """
+    If you would like to place another order, you can do so here:
+    {}
+    """.format(request.build_absolute_uri(location=reverse('index')))
+    send_email(request, order.requester_email, subject, body)
+
+
+def send_email(request, recipient, subject, body):
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     from_email = Email(settings.EMAIL_FROM_ADDRESS)
-    subject = '{} lbs of berries will be ready on {}'.format(order.quantity, order.pretty_date)
-    to_email = Email(order.requester_email)
+    to_email = Email(recipient)
     content = Content("text/plain", body)
     try:
         mail = Mail(from_email, subject, to_email, content)
         sg.client.mail.send.post(request_body=mail.get())
+        messages.info(request, "You will receive an email confirmation within about 10 minutes.")
     except Exception as err:
         messages.error(request, "Unable to send email: {}".format(err))
 
@@ -128,7 +144,7 @@ def process_form(request, order=None, creating_new=False):
             messages.success(request, mark_safe(msg))
 
             if creating_new:
-                email_order_info(request, order)
+                email_new_order_info(request, order)
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
             # The bootstrap inline form displays global errors automatically, so we will remove
