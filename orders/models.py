@@ -2,8 +2,8 @@ import datetime
 import uuid
 
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db import models
-from dynamic_preferences.registries import global_preferences_registry
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -18,30 +18,6 @@ def greater_than_zero(value):
         raise ValidationError('{} is not greater than 0.'.format(value))
 
 
-def after_yesterday(value):
-    if value < datetime.date.today():
-        raise ValidationError("The pickup date cannot be in the past.")
-
-
-def is_during_the_season(value):
-    this_year = datetime.datetime.today().year
-    if value.year != this_year:
-        raise ValidationError("Orders are only allowed for {}.".format(this_year))
-
-    global_preferences = global_preferences_registry.manager()
-
-    start_day = global_preferences['season_start_day']
-    end_day = global_preferences['season_end_day']
-    start_of_season = datetime.date(year=this_year, month=6, day=start_day)
-    end_of_season = datetime.date(year=this_year, month=9, day=end_day)
-
-    if value < start_of_season:
-        raise ValidationError("The pick up season starts June {}.".format(start_day))
-
-    if value > end_of_season:
-        raise ValidationError("The pick up season ends Sept {}.".format(end_day))
-
-
 class Order(models.Model):
     STATUS_CHOICES = (
         ('PENDING', 'Pending'),
@@ -51,10 +27,10 @@ class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     create_date = models.DateTimeField(default=datetime.datetime.now)
     last_updated = models.DateTimeField(default=datetime.datetime.now)
-    pickup_date = models.DateField(validators=[after_yesterday, is_during_the_season,])
+    pickup_date = models.DateField()
     quantity = models.IntegerField(validators=[multiple_of_ten, greater_than_zero])
     requester_name = models.CharField(max_length=128)
-    requester_email = models.CharField(max_length=128)
+    requester_email = models.CharField(max_length=128, validators = [validate_email])
     requester_phone_number = PhoneNumberField(blank=True)
     comments = models.TextField(blank=True)
     status = models.CharField(

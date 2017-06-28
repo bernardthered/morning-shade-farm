@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('create_date', models.DateTimeField(default=datetime.datetime.now)),
                 ('last_updated', models.DateTimeField(default=datetime.datetime.now)),
-                ('pickup_date', models.DateField(validators=[orders.models.after_yesterday, orders.models.is_during_the_season])),
+                ('pickup_date', models.DateField()),
                 ('quantity', models.IntegerField(validators=[orders.models.multiple_of_ten, orders.models.greater_than_zero])),
                 ('requester_name', models.CharField(max_length=128)),
                 ('requester_email', models.CharField(max_length=128)),

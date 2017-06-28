@@ -1,13 +1,41 @@
+import datetime
+
 from bootstrap3_datetime.widgets import DateTimePicker
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Button, Layout, Submit
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db.models import Sum
 from django.urls import reverse
+from dynamic_preferences.registries import global_preferences_registry
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 from .models import Order, DailyLimit
+
+
+def after_yesterday(value):
+    if value < datetime.date.today():
+        raise ValidationError("The pickup date cannot be in the past.")
+
+
+def is_during_the_season(value):
+    this_year = datetime.datetime.today().year
+    if value.year != this_year:
+        raise ValidationError("Orders are only allowed for {}.".format(this_year))
+
+    global_preferences = global_preferences_registry.manager()
+
+    start_day = global_preferences['season_start_day']
+    end_day = global_preferences['season_end_day']
+    start_of_season = datetime.date(year=this_year, month=6, day=start_day)
+    end_of_season = datetime.date(year=this_year, month=9, day=end_day)
+
+    if value < start_of_season:
+        raise ValidationError("The pick up season starts June {}.".format(start_day))
+
+    if value > end_of_season:
+        raise ValidationError("The pick up season ends Sept {}.".format(end_day))
 
 
 class OrderForm(forms.ModelForm):
@@ -32,6 +60,7 @@ class OrderForm(forms.ModelForm):
             region='us')
         self.fields['pickup_date'].widget = \
             DateTimePicker(options={"format": "MM/DD/YYYY"})
+        self.fields['pickup_date'].validators=[after_yesterday, is_during_the_season,]
 
         if settings.DEBUG and False:
             self.fields['quantity'].initial = 1000
