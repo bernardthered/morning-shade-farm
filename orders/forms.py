@@ -62,12 +62,12 @@ class OrderForm(forms.ModelForm):
             DateTimePicker(options={"format": "MM/DD/YYYY"})
         self.fields['pickup_date'].validators=[after_yesterday, is_during_the_season,]
 
-        if settings.DEBUG and False:
+        if settings.DEBUG:
             self.fields['quantity'].initial = 1000
-            self.fields['requester_name'].initial = "Charles Reid"
-            self.fields['requester_email'].initial = "creid@example.com"
+            self.fields['requester_name'].initial = "Bernard"
+            self.fields['requester_email'].initial = "bernard@example.com"
             self.fields['requester_phone_number'].initial = "5035555678"
-            self.fields['pickup_date'].initial = "06/20/2017"
+            self.fields['pickup_date'].initial = "08/20/2017"
 
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
@@ -92,6 +92,10 @@ class OrderForm(forms.ModelForm):
     def clean(self):
         pickup_date = self.cleaned_data.get('pickup_date')
         quantity = self.cleaned_data.get('quantity')
+        if not quantity:
+            # I received some errors that indicated quantity was somehow None here, not sure how
+            # but let's fail early if it happens.
+            raise ValidationError("Quantity cannot be none.", code="bad_quantity")
 
         if self.instance:
             # use the difference as the quantity to check. Ie. if they are going from 20 to 100
@@ -104,6 +108,7 @@ class OrderForm(forms.ModelForm):
                     return super(OrderForm, self).clean()
         limit = DailyLimit.get_limit_for_date(pickup_date)
         if not limit:
+            # no limit, skip checking
             return super(OrderForm, self).clean()
         already_requested = \
             Order.objects.filter(pickup_date=pickup_date).aggregate(Sum('quantity'))[
