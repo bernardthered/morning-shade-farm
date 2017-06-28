@@ -107,7 +107,7 @@ def email_canceled_order_notification(request, order):
 
 
 def send_email(request, recipient, subject, body):
-    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
     from_email = Email(settings.EMAIL_FROM_ADDRESS)
     to_email = Email(recipient)
     content = Content("text/plain", body)
