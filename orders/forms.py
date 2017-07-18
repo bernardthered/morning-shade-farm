@@ -97,7 +97,7 @@ class OrderForm(forms.ModelForm):
             # but let's fail early if it happens.
             raise ValidationError("Quantity cannot be none.", code="bad_quantity")
 
-        if self.instance:
+        if self.instance and self.instance.quantity:
             # use the difference as the quantity to check. Ie. if they are going from 20 to 100
             # lbs, make sure an additional 80 would not exceed the limit
             if self.instance.pickup_date == pickup_date:
