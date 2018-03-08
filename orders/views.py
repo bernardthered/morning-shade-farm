@@ -1,6 +1,5 @@
 import copy
 import datetime
-import os
 import sendgrid
 
 from django.conf import settings
@@ -18,6 +17,14 @@ from sendgrid.helpers.mail import Email, Content, Mail
 
 
 def index(request):
+    """
+    If it's outside of June-August, show a page that tells them to come back during the season
+    and links them to the main farm info site. Otherwise, show the main page with the order form.
+    """
+    cur_month = datetime.datetime.today().month
+    if cur_month < 6 or cur_month > 8:
+        return render(request, 'orders/out_of_season.html', {})
+
     form = process_form(request, creating_new=True)
     if isinstance(form, HttpResponseRedirect):
         # the form is not a form, but a redirect. Return that now.
