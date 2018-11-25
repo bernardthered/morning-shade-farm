@@ -47,3 +47,13 @@ class SeasonStartDay(IntPreference):
 class SeasonEndDay(IntPreference):
     name = 'season_end_day'
     default = 15
+
+@global_preferences_registry.register
+class OutOfSeasonMessage(LongStringPreference):
+    name = 'out_of_season_message'
+    default = '''
+        Come back here in June to order pre-picked blueberries.
+        Until then, you can <a
+        href="https://www.tricountyfarm.org/farm/morning-shade-farm-and-berry-nursery">
+            visit the farm info page</a> for plant sales and other info.
+    '''

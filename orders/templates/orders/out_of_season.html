@@ -5,10 +5,7 @@
     <center>
     <p>
         <br>
-        Come back here in June to order pre-picked blueberries.
-        Until then, you can <a
-        href="https://www.tricountyfarm.org/farm/morning-shade-farm-and-berry-nursery">
-            visit the farm info page</a> for plant sales and other info.
+        {{ global_preferences.out_of_season_message|safe }}
     </p>
     </center>
 {% endblock %}
