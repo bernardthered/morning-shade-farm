@@ -5,3 +5,4 @@ db.sqlite3
 *.swp
 .DS_store
 staticfiles
+morning_shade_farm/settings_local.py

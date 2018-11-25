@@ -21,6 +21,11 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+try:
+    # allow for overriding of DEBUG
+    from .settings_local import DEBUG
+except ImportError:
+    pass
 ADMINS = [('Bernard', 'bernardthered@gmail.com')]
 
 EMAIL_HOST = 'smtp.sendgrid.net'
@@ -65,14 +70,13 @@ INSTALLED_APPS = [
     'orders',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
