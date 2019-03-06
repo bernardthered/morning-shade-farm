@@ -19,7 +19,10 @@ def after_yesterday(value):
         raise ValidationError("The pickup date cannot be in the past.")
 
 
-def is_during_the_season(value):
+def is_during_the_season(value=None, raise_exception=True):
+    if not value:
+        value = datetime.date.today()
+
     this_year = datetime.datetime.today().year
     if value.year != this_year:
         raise ValidationError("Orders are only allowed for {}.".format(this_year))
@@ -27,15 +30,25 @@ def is_during_the_season(value):
     global_preferences = global_preferences_registry.manager()
 
     start_day = global_preferences['season_start_day']
+    start_month = global_preferences['season_start_month']
     end_day = global_preferences['season_end_day']
-    start_of_season = datetime.date(year=this_year, month=6, day=start_day)
-    end_of_season = datetime.date(year=this_year, month=9, day=end_day)
+    end_month = global_preferences['season_end_month']
+    start_of_season = datetime.date(year=this_year, month=start_month, day=start_day)
+    end_of_season = datetime.date(year=this_year, month=end_month, day=end_day)
 
     if value < start_of_season:
-        raise ValidationError("The pick up season starts June {}.".format(start_day))
+        if raise_exception:
+            raise ValidationError(f"The pick up season starts {start_month}/{start_day}.")
+        else:
+            return False
 
     if value > end_of_season:
-        raise ValidationError("The pick up season ends Sept {}.".format(end_day))
+        if raise_exception:
+            raise ValidationError(f"The pick up season ends {end_month}/{end_day}.")
+        else:
+            return False
+    return True
+
 
 
 class OrderForm(forms.ModelForm):

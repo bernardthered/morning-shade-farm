@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from orders.forms import OrderForm
+from orders.forms import is_during_the_season, OrderForm
 from orders.models import Price, Order, DailyLimit
 
 from sendgrid.helpers.mail import Email, Content, Mail
@@ -21,8 +21,7 @@ def index(request):
     If it's outside of June-Sept, show a page that tells them to come back during the season
     and links them to the main farm info site. Otherwise, show the main page with the order form.
     """
-    cur_month = datetime.datetime.today().month
-    if cur_month < 6 or cur_month > 9:
+    if not is_during_the_season(raise_exception=False):
         return render(request, 'orders/out_of_season.html', {})
 
     form = process_form(request, creating_new=True)

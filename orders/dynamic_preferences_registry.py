@@ -43,10 +43,24 @@ class SeasonStartDay(IntPreference):
     name = 'season_start_day'
     default = 24
 
+
+@global_preferences_registry.register
+class SeasonStartMonth(IntPreference):
+    name = 'season_start_month'
+    default = 6
+
+
 @global_preferences_registry.register
 class SeasonEndDay(IntPreference):
     name = 'season_end_day'
     default = 15
+
+
+@global_preferences_registry.register
+class SeasonEndMonth(IntPreference):
+    name = 'season_end_month'
+    default = 9
+
 
 @global_preferences_registry.register
 class OutOfSeasonMessage(LongStringPreference):
