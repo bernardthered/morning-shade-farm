@@ -81,6 +81,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+DYNAMIC_PREFERENCES = {
+    # Caching of preferences was causing annoyances for the cycle of changing & testing them
+    'ENABLE_CACHE': False,
+}
+
 ROOT_URLCONF = 'morning_shade_farm.urls'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
