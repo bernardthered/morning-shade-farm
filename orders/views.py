@@ -1,5 +1,7 @@
 import copy
 import datetime
+import logging
+
 import sendgrid
 
 from django.conf import settings
@@ -14,6 +16,8 @@ from orders.forms import is_during_the_season, OrderForm
 from orders.models import Price, Order, DailyLimit
 
 from sendgrid.helpers.mail import Email, Content, Mail
+
+logger = logging.getLogger('testlogger')
 
 
 def index(request):
@@ -113,16 +117,18 @@ def email_canceled_order_notification(request, order):
 
 
 def send_email(request, recipient, subject, body):
-    sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
-    from_email = Email(settings.EMAIL_FROM_ADDRESS)
-    to_email = Email(recipient)
-    content = Content("text/plain", body)
+    message = Mail(
+        from_email=settings.EMAIL_FROM_ADDRESS,
+        to_emails=recipient,
+        subject=subject,
+        html_content=body)
     try:
-        mail = Mail(from_email, subject, to_email, content)
-        sg.client.mail.send.post(request_body=mail.get())
+        sendgrid_client = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+        sendgrid_client.send(message)
         messages.info(request, "You will receive an email confirmation within about 10 minutes.")
     except Exception as err:
         messages.error(request, "Unable to send email: {}".format(err))
+        logger.exception("Unable to send email")
 
 
 def process_form(request, order=None, creating_new=False):
