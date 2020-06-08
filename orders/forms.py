@@ -80,7 +80,7 @@ class OrderForm(forms.ModelForm):
             self.fields['requester_name'].initial = "Bernard"
             self.fields['requester_email'].initial = "bernard@example.com"
             self.fields['requester_phone_number'].initial = "5035555678"
-            self.fields['pickup_date'].initial = "08/20/2017"
+            self.fields['pickup_date'].initial = "06/20/2020"
 
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
