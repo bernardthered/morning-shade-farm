@@ -22,10 +22,10 @@ class OrderAdmin(TotalsumAdmin, ImportExportActionModelAdmin):
     exclude = []
     search_fields = ['requester_name', 'requester_email', 'quantity']
     list_filter = ['status', ('pickup_date', DateRangeFilter)]
-    ordering = ['pickup_date', '-quantity']
+    ordering = ['pickup_date', 'pickup_time', '-quantity']
     actions = [fulfill_order, cancel_order]
     list_display = (
-        'status', 'pickup_date', 'quantity', 'requester_name',
+        'status', 'pickup_date', 'pickup_time', 'quantity', 'requester_name',
         'requester_phone_number', 'comments',
     )
     readonly_fields = ['id', 'total_cost',]

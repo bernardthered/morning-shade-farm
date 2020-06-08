@@ -24,13 +24,23 @@ class Order(models.Model):
         ('FILLED', 'Filled'),
         ('CANCELED', 'Canceled'),
     )
+    TIME_CHOICES = (
+        (8, "8-9am"),
+        (9, "9-10am"),
+        (10, "10-11am"),
+        (11, "11am-noon"),
+        (12, "noon-1pm"),
+        (13, "1-2pm"),
+        (14, "2-3pm"),
+    )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     create_date = models.DateTimeField(default=datetime.datetime.now)
     last_updated = models.DateTimeField(default=datetime.datetime.now)
     pickup_date = models.DateField()
+    pickup_time = models.IntegerField(choices=TIME_CHOICES, blank=True, null=True)
     quantity = models.IntegerField(validators=[multiple_of_ten, greater_than_zero])
     requester_name = models.CharField(max_length=128)
-    requester_email = models.CharField(max_length=128, validators = [validate_email])
+    requester_email = models.CharField(max_length=128, validators=[validate_email])
     requester_phone_number = PhoneNumberField(blank=True)
     comments = models.TextField(blank=True)
     status = models.CharField(

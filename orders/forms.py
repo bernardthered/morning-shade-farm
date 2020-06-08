@@ -61,6 +61,7 @@ class OrderForm(forms.ModelForm):
             'requester_email',
             'requester_phone_number',
             'pickup_date',
+            'pickup_time',
             'comments',)
 
     def __init__(self, *args, **kwargs):
