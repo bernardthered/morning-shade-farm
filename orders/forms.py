@@ -74,7 +74,8 @@ class OrderForm(forms.ModelForm):
             region='us')
         self.fields['pickup_date'].widget = \
             DateTimePicker(options={"format": "MM/DD/YYYY"})
-        self.fields['pickup_date'].validators=[after_yesterday, is_during_the_season,]
+        self.fields['pickup_date'].validators = [after_yesterday, is_during_the_season]
+        self.fields['pickup_time'].widget.attrs['required'] = 'required'
 
         if settings.DEBUG:
             self.fields['quantity'].initial = 1000
