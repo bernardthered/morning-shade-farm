@@ -87,7 +87,7 @@ def cancel_order(request, order_id):
 def email_new_order_info(request, order):
     subject = "{} lbs of berries will be ready on {}".format(order.quantity, order.pretty_date)
     body = """
-    We'll see you for your berry pickup on {}!
+    We'll see you for your berry pickup on {} from {}!
     
     You can see, update, and cancel your order here: {}
     
@@ -99,6 +99,7 @@ def email_new_order_info(request, order):
     Morning Shade Farm
     """.format(
         order.pretty_date,
+        order.pretty_time,
         request.build_absolute_uri(location=reverse('order_detail', args=[order.id])),
         order.quantity,
         order.total_cost,
@@ -143,8 +144,8 @@ def process_form(request, order=None, creating_new=False):
             order.save()  # just to calculate & store the price
 
             msg = 'Your order for {} pounds of blueberries for ${} has been received. You can ' \
-                  'pick them up after 9am on {} at Morning Shade Farm.'.format(
-                   order.quantity, order.total_cost, order.pretty_date,
+                  'pick them up from {} on {} at Morning Shade Farm.'.format(
+                   order.quantity, order.total_cost, order.pretty_time, order.pretty_date,
             )
             if order.quantity >= 200:
                 msg += " If you have additional requests, please add comments to your order or call us."

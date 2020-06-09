@@ -67,6 +67,10 @@ class Order(models.Model):
     def pretty_date(self):
         return self.pickup_date.strftime("%a %b %d")
 
+    @property
+    def pretty_time(self):
+        return self.get_pickup_time_display()
+
     def __str__(self):
         return "{} order for {} pounds on {} for {}".format(
             self.status.capitalize(), self.quantity, self.pickup_date, self.requester_name)
