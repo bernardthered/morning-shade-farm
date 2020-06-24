@@ -1,0 +1,12 @@
+{% extends 'orders/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <p style="text-align:center;">
+        <br>
+        Order <i>{{ order_id }}</i> was not found.<br>
+        <br>
+        Perhaps you clicked on an order link from a previous
+        season's order that was cleaned up from the database?
+    </p>
+{% endblock %}

@@ -63,7 +63,11 @@ def upcoming(request):
 
 
 def order_detail(request, order_id):
-    order = Order.objects.get(id=order_id)
+    try:
+        order = Order.objects.get(id=order_id)
+    except Order.DoesNotExist:
+        return render(request, 'orders/order_not_found.html', {'order_id': order_id})
+
     form = process_form(request, order)
     if isinstance(form, HttpResponseRedirect):
         # the form is not a form, but a redirect. Return that now.
