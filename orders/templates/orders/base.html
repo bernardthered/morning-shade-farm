@@ -22,13 +22,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <div class="page-header">
-            <center><h1>Morning Shade Farm</h1></center>
-        </div>
-
-        <center>
+        <div class="page-header" style="text-align:center;">
+            <h1>Morning Shade Farm</h1>
             <img src="{% static 'blueberries.jpg' %}" width=90px>
-        </center>
+        </div>
 
         <div class="content container">
             {% if messages %}
@@ -47,7 +44,7 @@
 
         <div class="content container">
             <div id="footer-links" class="row" style="font-size:large">
-                    <center><p>
+                    <p style="text-align:center;">
                         {% url 'index' as the_url %}
                         {% if request.get_full_path != the_url %}
                             <a href="/">Main Page</a> |
@@ -61,8 +58,7 @@
                             | <a href="/admin">Admin Pages</a> |
                             <a href="/orders/upcoming">Upcoming Orders</a>
                         {% endif %}
-                        </i>
-                    </p></center>
+                    </p>
             </div>
         </div>
     </body>

@@ -7,6 +7,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import Sum
+from django.forms import ModelChoiceField, ChoiceField
 from django.urls import reverse
 from dynamic_preferences.registries import global_preferences_registry
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
@@ -75,7 +76,8 @@ class OrderForm(forms.ModelForm):
         self.fields['pickup_date'].widget = \
             DateTimePicker(options={"format": "MM/DD/YYYY"})
         self.fields['pickup_date'].validators = [after_yesterday, is_during_the_season]
-        self.fields['pickup_time'].widget.attrs['required'] = 'required'
+        time_choices = [(None, "Approximate pickup time"), *Order.TIME_CHOICES]
+        self.fields['pickup_time'] = ChoiceField(choices=time_choices, required=True)
 
         if settings.DEBUG:
             self.fields['quantity'].initial = 1000
