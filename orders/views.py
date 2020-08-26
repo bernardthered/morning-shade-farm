@@ -148,7 +148,7 @@ def process_form(request, order=None, creating_new=False):
             order.save()  # just to calculate & store the price
 
             share_button = """<p>
-                <div data-href="http://www.morningshade.farm/"
+                <div class="fb-share-button" data-href="http://www.morningshade.farm/" 
                 data-layout="button" data-size="large">
                 <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.morningshade.farm%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a>
                 </div>
