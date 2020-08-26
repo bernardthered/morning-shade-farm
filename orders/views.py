@@ -44,7 +44,7 @@ def upcoming(request):
     # for the next 100 days
     for i in range(100):
         day_total = {}
-        the_days_orders = Order.objects.filter(pickup_date=cur_date)
+        the_days_orders = Order.objects.filter(pickup_date=cur_date).exclude(status='CANCELED')
         quant = the_days_orders.aggregate(Sum('quantity'))['quantity__sum']
         if not quant:
             quant = 0
