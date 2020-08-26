@@ -3,10 +3,10 @@
 
 {% block content %}
     <div class="col-md-6">
-        <h1>Farm Info</h1>
+        <h2>Farm Info</h2>
         {{ global_preferences.farm_info|safe }}
 
-        <h1>Prices</h1>
+        <h2>Prices</h2>
         {{ global_preferences.prices|safe }}
         <br><br>
         <b>For Pre-Picked Blueberries</b><br>
@@ -15,13 +15,13 @@
         {% endfor %}
 
         {% if global_preferences.about_message %}
-            <h1>About</h1>
+            <h2>About</h2>
             {{ global_preferences.about_message|safe }}
         {% endif %}
     </div>
 
     <div class="col-md-6">
-        <h1>New Order</h1>
+        <h2>New Order</h2>
         <i>For pre-picked blueberries, in 10 pound bags, for pickup at the farm.</i><br><br>
         <form method="POST" class="post-form">
             {% csrf_token %}
