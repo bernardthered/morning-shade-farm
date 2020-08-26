@@ -147,9 +147,15 @@ def process_form(request, order=None, creating_new=False):
             order = form.save()
             order.save()  # just to calculate & store the price
 
+            share_button = """<p>
+                <div data-href="http://www.morningshade.farm/"
+                data-layout="button" data-size="large">
+                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.morningshade.farm%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a>
+                </div>
+            """
             msg = 'Your order for {} pounds of blueberries for ${} has been received. You can ' \
                   'pick them up from {} on {} at Morning Shade Farm.'.format(
-                   order.quantity, order.total_cost, order.pretty_time, order.pretty_date,
+                   order.quantity, order.total_cost, order.pretty_time, order.pretty_date
             )
             if order.quantity >= 200:
                 msg += " If you have additional requests, please add comments to your order or call us."
@@ -157,6 +163,8 @@ def process_form(request, order=None, creating_new=False):
             if creating_new:
                 msg += " You can <a href={}>see, update, and cancel your order here</a>.".format(
                     reverse('order_detail', args=[order.id]))
+
+            msg += share_button
 
             messages.success(request, mark_safe(msg))
 
