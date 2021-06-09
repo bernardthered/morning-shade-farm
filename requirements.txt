@@ -7,7 +7,7 @@ click==7.1.2
 decorator==4.4.2
 diff-match-patch==20181111
 dj-database-url==0.5.0
-Django==2.2.13
+Django==2.2.22
 django-admin-rangefilter==0.6.1
 django-bootstrap3-datetimepicker-2==2.8.2
 django-crispy-forms==1.9.1
