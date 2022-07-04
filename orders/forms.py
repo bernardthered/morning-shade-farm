@@ -84,7 +84,7 @@ class OrderForm(forms.ModelForm):
             self.fields['requester_name'].initial = "Bernard"
             self.fields['requester_email'].initial = "bernard@example.com"
             self.fields['requester_phone_number'].initial = "5035555678"
-            self.fields['pickup_date'].initial = "09/14/2020"
+            self.fields['pickup_date'].initial = "07/05/2022"
             self.fields['pickup_time'].initial = 8
 
         self.helper = FormHelper()
@@ -125,9 +125,9 @@ class OrderForm(forms.ModelForm):
                     # decrease, so let them do this (even if it's still over the limit for the day)
                     return super(OrderForm, self).clean()
         limit = DailyLimit.get_limit_for_date(pickup_date)
-        if not limit:
+        if limit is None:
             # no limit, skip checking
-            return super(OrderForm, self).clean()
+            return super().clean()
         already_requested = \
             Order.objects.filter(pickup_date=pickup_date).aggregate(Sum('quantity'))[
                 'quantity__sum'] or 0

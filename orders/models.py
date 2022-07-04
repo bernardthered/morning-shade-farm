@@ -99,10 +99,10 @@ class DailyLimit(models.Model):
     @staticmethod
     def get_limit_for_date(date):
         limit_for_date = DailyLimit.objects.filter(date=date).first()
-        if limit_for_date:
+        if limit_for_date is not None:
             return limit_for_date.limit
         global_limit = DailyLimit.objects.filter(date=None).first()
-        if global_limit:
+        if global_limit is not None:
             return global_limit.limit
         return None
 
