@@ -1,0 +1,36 @@
+<style type="text/css" media="print">
+    @page {
+        size: landscape;
+    }
+    body {
+        writing-mode: tb-rl;
+    }
+
+    .rounded {
+      border: 3px;
+      border-radius: 5px;
+    }
+</style>
+
+{% block content %}
+    <h1>Pending Orders for {{ date }}</h1>
+{#    <table class="rounded">#}
+    <table border="2">
+        <tr>
+            <th>Pounds</th>
+            <th>Time</th>
+            <th>Requester</th>
+            <th>Phone</th>
+            <th>Comments</th>
+        </tr>
+    {% for order in orders %}
+        <tr>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.pickup_time }}</td>
+            <td>{{ order.requester_name }}</td>
+            <td>{{ order.requester_phone_number }}</td>
+            <td>{{ order.comments }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

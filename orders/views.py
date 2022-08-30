@@ -36,13 +36,26 @@ def index(request):
     return render(request, 'orders/index.html', {'form': form, 'prices': prices})
 
 
+def orders_for_day(request, date=None):
+    if not date:
+        date = datetime.date.today()
+    print(date)
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
+
+    orders = Order.objects.filter(pickup_date=date).exclude(status='CANCELED')
+    return render(request, 'orders/orders_for_day.html', {
+        'date': date,
+        'orders': orders,
+    })
+
 def upcoming(request):
     if not request.user.is_superuser:
         return HttpResponseForbidden()
     day_totals = []
     cur_date = datetime.datetime.today()
-    # for the next 100 days
-    for i in range(100):
+    # for the next 30 days
+    for i in range(30):
         day_total = {}
         the_days_orders = Order.objects.filter(pickup_date=cur_date).exclude(status='CANCELED')
         quant = the_days_orders.aggregate(Sum('quantity'))['quantity__sum']
