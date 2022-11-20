@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class BerryorderConfig(AppConfig):
-    name = 'orders'
+    name = "orders"

@@ -10,19 +10,20 @@ from phonenumber_field.modelfields import PhoneNumberField
 def multiple_of_ten(value):
     if value % 10 != 0:
         raise ValidationError(
-            'The berries are sold in 10 pound bags, please enter a multiple of 10.')
+            "The berries are sold in 10 pound bags, please enter a multiple of 10."
+        )
 
 
 def greater_than_zero(value):
     if value <= 0:
-        raise ValidationError('{} is not greater than 0.'.format(value))
+        raise ValidationError("{} is not greater than 0.".format(value))
 
 
 class Order(models.Model):
     STATUS_CHOICES = (
-        ('PENDING', 'Pending'),
-        ('FILLED', 'Filled'),
-        ('CANCELED', 'Canceled'),
+        ("PENDING", "Pending"),
+        ("FILLED", "Filled"),
+        ("CANCELED", "Canceled"),
     )
     TIME_CHOICES = (
         (8, "8-9am"),
@@ -43,9 +44,10 @@ class Order(models.Model):
     requester_email = models.CharField(max_length=128, validators=[validate_email])
     requester_phone_number = PhoneNumberField(blank=True)
     comments = models.TextField(blank=True)
-    status = models.CharField(
-        choices=STATUS_CHOICES, max_length=128, default="PENDING")
-    total_cost = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=128, default="PENDING")
+    total_cost = models.DecimalField(
+        max_digits=16, decimal_places=2, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         self.total_cost = self.quantity * self.get_cost_per_pound()
@@ -73,7 +75,12 @@ class Order(models.Model):
 
     def __str__(self):
         return "{} order for {} pounds on {} for {}".format(
-            self.status.capitalize(), self.quantity, self.pickup_date, self.requester_name)
+            self.status.capitalize(),
+            self.quantity,
+            self.pickup_date,
+            self.requester_name,
+        )
+
     description = property(__str__)
 
 
@@ -86,15 +93,21 @@ class Price(models.Model):
         ordering = ["-min_quantity"]
 
     def __str__(self):
-        return "{} per lb. for orders over {} lbs.".format(self.cost_per_pound, self.min_quantity)
+        return "{} per lb. for orders over {} lbs.".format(
+            self.cost_per_pound, self.min_quantity
+        )
 
 
 class DailyLimit(models.Model):
     limit = models.IntegerField()
     # When date is null, it is the global default limit
     # TODO: also enforce uniqueness of the null date
-    date = models.DateField(null=True, blank=True, unique=True,
-                            help_text="If left blank, this will be the default limit for all days.")
+    date = models.DateField(
+        null=True,
+        blank=True,
+        unique=True,
+        help_text="If left blank, this will be the default limit for all days.",
+    )
 
     @staticmethod
     def get_limit_for_date(date):
@@ -110,4 +123,3 @@ class DailyLimit(models.Model):
         if not self.date:
             return "Default daily limit: {} pounds".format(self.limit)
         return "{} pound limit on {}".format(self.limit, self.date)
-
