@@ -7,10 +7,9 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import Sum
-from django.forms import ModelChoiceField, ChoiceField
+from django.forms import ChoiceField
 from django.urls import reverse
 from dynamic_preferences.registries import global_preferences_registry
-from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 from .models import Order, DailyLimit
 
@@ -51,7 +50,6 @@ def is_during_the_season(value=None, raise_exception=True):
     return True
 
 
-
 class OrderForm(forms.ModelForm):
 
     class Meta:
@@ -71,8 +69,6 @@ class OrderForm(forms.ModelForm):
         self.fields['requester_email'].label = "Your email address"
         self.fields['requester_phone_number'].label = "Your phone number"
         self.fields['quantity'].label = "Number of pounds of blueberries"
-        self.fields['requester_phone_number'].widget = PhoneNumberInternationalFallbackWidget(
-            region='us')
         self.fields['pickup_date'].widget = \
             DateTimePicker(options={"format": "MM/DD/YYYY"})
         self.fields['pickup_date'].validators = [after_yesterday, is_during_the_season]
@@ -84,7 +80,7 @@ class OrderForm(forms.ModelForm):
             self.fields['requester_name'].initial = "Bernard"
             self.fields['requester_email'].initial = "bernard@example.com"
             self.fields['requester_phone_number'].initial = "5035555678"
-            self.fields['pickup_date'].initial = "07/05/2022"
+            self.fields['pickup_date'].initial = "12/10/2022"
             self.fields['pickup_time'].initial = 8
 
         self.helper = FormHelper()

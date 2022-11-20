@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     # 3rd party apps added for this project
     'crispy_forms',
     'django_extensions',
-    'totalsum',
     'rangefilter',
     'import_export',
     'dynamic_preferences',

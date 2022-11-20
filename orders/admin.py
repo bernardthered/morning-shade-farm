@@ -1,7 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ImportExportActionModelAdmin
-from rangefilter.filter import DateRangeFilter
-from totalsum.admin import TotalsumAdmin
+from rangefilter.filters import DateRangeFilter
 
 from .models import Order, Price, DailyLimit
 
@@ -16,9 +15,7 @@ def cancel_order(modeladmin, request, queryset):
 cancel_order.short_description = "Mark selected orders as canceled"
 
 
-class OrderAdmin(TotalsumAdmin, ImportExportActionModelAdmin):
-    totalsum_list = ('quantity', 'total_cost')
-
+class OrderAdmin(ImportExportActionModelAdmin):
     exclude = []
     search_fields = ['requester_name', 'requester_email', 'quantity']
     list_filter = ['status', ('pickup_date', DateRangeFilter)]
@@ -28,7 +25,8 @@ class OrderAdmin(TotalsumAdmin, ImportExportActionModelAdmin):
         'status', 'pickup_date', 'pickup_time', 'quantity', 'requester_name',
         'requester_phone_number', 'comments',
     )
-    readonly_fields = ['id', 'total_cost',]
+    readonly_fields = ['id', 'total_cost']
+
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Price)
