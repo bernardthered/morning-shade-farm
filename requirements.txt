@@ -20,7 +20,7 @@ django-totalsum-admin-django3==1.0
 et-xmlfile==1.1.0
 first==2.0.2
 gunicorn==20.1.0
-ipython==8.6.0
+ipython==8.10.0
 ipython-genutils==0.2.0
 jdcal==1.4.1
 jedi==0.18.1
