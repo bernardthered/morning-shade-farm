@@ -70,9 +70,9 @@ def upcoming(request):
             quant = 0
         day_total["date"], _ = str(cur_date).split(maxsplit=1)
         daily_limit = DailyLimit.get_limit_for_date(cur_date)
-        day_total["limit"] = "Limit: {} pounds".format(daily_limit)
+        day_total["limit"] = f"Limit: {daily_limit} pounds"
         day_total["date_str"] = cur_date.strftime("%a %b %d")
-        day_total["total_quantity"] = "{} pounds".format(quant)
+        day_total["total_quantity"] = f"{quant} pounds"
         day_total["num_orders"] = the_days_orders.count()
         day_total["num_rejected_orders"] = the_days_orders.filter(
             status="REJECTED"
@@ -103,9 +103,7 @@ def order_detail(request, order_id):
         request,
         "orders/order_detail.html",
         {
-            "pagetitle": "Your {} Blueberry Order".format(
-                order.status.capitalize(), order.id
-            ),
+            "pagetitle": f"Your {order.status.capitalize()} Blueberry Order {order.id}",
             "form": form,
         },
     )
@@ -121,41 +119,31 @@ def cancel_order(request, order_id):
 
 
 def email_new_order_info(request, order):
-    subject = "{} lbs of berries will be ready on {}".format(
-        order.quantity, order.pretty_date
-    )
-    body = """
-    We'll see you for your berry pickup on {} from {}!
+    order_url = request.build_absolute_uri(location=reverse("order_detail", args=[order.id]))
+    subject = f"{order.quantity} lbs of berries will be ready on {order.pretty_date}"
+    body = f"""
+    <p>We'll see you for your berry pickup on {order.pretty_date} from {order.pretty_time}!</p>
     
-    You can see, update, and cancel your order here: {}
+    <p>You can see, update, and cancel your order here: {order_url}</p>
     
-    Quantity (in pounds): {}
-    Cost: {}
-    Order ID: {}
+    <p>
+    Quantity (in pounds): {order.quantity}<br>
+    Cost: {order.total_cost}<br>
+    Order ID: {order.id}<br>
+    </p>
     
+    <p>
     Thanks for your order!
     Morning Shade Farm
-    """.format(
-        order.pretty_date,
-        order.pretty_time,
-        request.build_absolute_uri(location=reverse("order_detail", args=[order.id])),
-        order.quantity,
-        order.total_cost,
-        order.id,
-    )
+    </p>
+    """
     send_email(request, order.requester_email, subject, body)
 
 
 def email_canceled_order_notification(request, order):
-    subject = "Your order for {} lbs of berries has been canceled!".format(
-        order.quantity
-    )
-    body = """
-    If you would like to place another order, you can do so here:
-    {}
-    """.format(
-        request.build_absolute_uri(location=reverse("index"))
-    )
+    subject = f"Your order for {order.quantity} lbs of berries has been canceled!"
+    main_url = request.build_absolute_uri(location=reverse("index"))
+    body = f"If you would like to place another order, you can do so here: {main_url}"
     send_email(request, order.requester_email, subject, body)
 
 
@@ -168,15 +156,12 @@ def send_email(request, recipient, subject, body):
     )
     try:
         sendgrid_client = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
-        logger.info(
-            f"Sending email from {settings.EMAIL_FROM_ADDRESS} to {recipient} with API KEY ending with {settings.SENDGRID_API_KEY[-4:]}")
-        resp = sendgrid_client.send(message)
-        logger.info(f"Response: {resp}")
+        sendgrid_client.send(message)
         messages.info(
             request, "You will receive an email confirmation within about 10 minutes."
         )
     except Exception as err:
-        messages.error(request, "Unable to send email: {}".format(err))
+        messages.error(request, f"Unable to send email: {err}")
         logger.exception("Unable to send email")
 
 
@@ -198,21 +183,15 @@ def process_form(request, order=None, creating_new=False):
                 </div>
             """
             msg = (
-                "Your order for {} pounds of blueberries for ${} has been received. You can "
-                "pick them up from {} on {} at Morning Shade Farm.".format(
-                    order.quantity,
-                    order.total_cost,
-                    order.pretty_time,
-                    order.pretty_date,
-                )
+                f"Your order for {order.quantity} pounds of blueberries for ${order.total_cost} has been received. You "
+                f"can pick them up from {order.pretty_time} on {order.pretty_date} at Morning Shade Farm."
             )
             if order.quantity >= 200:
                 msg += " If you have additional requests, please add comments to your order or call us."
 
             if creating_new:
-                msg += " You can <a href={}>see, update, and cancel your order here</a>.".format(
-                    reverse("order_detail", args=[order.id])
-                )
+                order_url = reverse("order_detail", args=[order.id])
+                msg += f" You can <a href={order_url}>see, update, and cancel your order here</a>."
 
             msg += share_button
 
@@ -229,7 +208,7 @@ def process_form(request, order=None, creating_new=False):
             if "__all__" in non_global_errors:
                 del non_global_errors["__all__"]
             if non_global_errors:
-                msg = mark_safe("The form has errors: {}".format(non_global_errors))
+                msg = mark_safe(f"The form has errors: {non_global_errors}")
                 messages.add_message(
                     request, messages.constants.ERROR, msg, extra_tags="danger"
                 )
