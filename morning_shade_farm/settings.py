@@ -29,9 +29,12 @@ except ImportError:
     pass
 ADMINS = [('Bernard', 'bernardthered@gmail.com')]
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'app64500666@heroku.com'
-EMAIL_HOST_PASSWORD =  os.environ['SENDGRID_PASSWORD']
+# Not using django's smtp module, so these are not needed
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'app64500666@heroku.com'
+# EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+
+# But we do use these with sendgrid's email module
 EMAIL_FROM_ADDRESS = 'morningshadefarm@gmail.com'
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
