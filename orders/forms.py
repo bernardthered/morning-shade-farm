@@ -25,7 +25,7 @@ def is_during_the_season(value=None, raise_exception=True):
 
     this_year = datetime.datetime.today().year
     if value.year != this_year:
-        raise ValidationError("Orders are only allowed for {}.".format(this_year))
+        raise ValidationError(f"Orders are only allowed for {this_year}.")
 
     global_preferences = global_preferences_registry.manager()
 
@@ -102,9 +102,7 @@ class OrderForm(forms.ModelForm):
                     Button(
                         "cancel",
                         "Cancel Order",
-                        onclick="window.location.href='{}';".format(
-                            reverse("cancel_order", kwargs={"order_id": order.id})
-                        ),
+                        onclick=f"window.location.href='{reverse('cancel_order', kwargs={'order_id': order.id})}';",
                     )
                 )
                 self.helper.add_input(Submit("submit", "Update Order"))
@@ -142,9 +140,6 @@ class OrderForm(forms.ModelForm):
         overage = (already_requested + quantity) - limit
         if overage > 0:
             raise forms.ValidationError(
-                "This order would put the total requests for {} {} pounds over the limit".format(
-                    pickup_date,
-                    overage,
-                )
+                f"This order would put the total requests for {pickup_date} {overage} pounds over the limit"
             )
         return super(OrderForm, self).clean()
