@@ -168,7 +168,10 @@ def send_email(request, recipient, subject, body):
     )
     try:
         sendgrid_client = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
-        sendgrid_client.send(message)
+        logger.info(
+            f"Sending email from {settings.EMAIL_FROM_ADDRESS} to {recipient} with API KEY ending with {settings.SENDGRID_API_KEY[-4:]}")
+        resp = sendgrid_client.send(message)
+        logger.info(f"Response: {resp}")
         messages.info(
             request, "You will receive an email confirmation within about 10 minutes."
         )

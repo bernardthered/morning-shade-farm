@@ -6,3 +6,4 @@ db.sqlite3
 .DS_store
 staticfiles
 morning_shade_farm/settings_local.py
+sendgrid.env
