@@ -122,13 +122,13 @@ def email_new_order_info(request, order):
     order_url = request.build_absolute_uri(location=reverse("order_detail", args=[order.id]))
     subject = f"{order.quantity} lbs of berries will be ready on {order.pretty_date}"
     body = f"""
-    <p>We'll see you for your berry pickup on {order.pretty_date} from {order.pretty_time}!</p>
+    <p>We'll see you for your berry pickup on <strong>{order.pretty_date} from {order.pretty_time}</strong>!</p>
     
     <p>You can see, update, and cancel your order here: {order_url}</p>
     
     <p>
-    Quantity (in pounds): {order.quantity}<br>
-    Cost: {order.total_cost}<br>
+    Quantity: <strong>{order.quantity} pounds</strong><br>
+    Cost: <strong>${order.total_cost}</strong><br>
     Order ID: {order.id}<br>
     </p>
     
