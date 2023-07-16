@@ -2,4 +2,4 @@
 
 For pre-ordering your blueberries in Canby, OR.
 
-Live, prod site: http://www.morningshadefarm.com/
+Live, prod site: https://www.morningshadefarm.com/
