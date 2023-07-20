@@ -36,7 +36,7 @@ pip-tools==6.10.0
 prompt-toolkit==3.0.32
 #psycopg2-binary==2.9.5
 ptyprocess==0.7.0
-Pygments==2.13.0
+Pygments==2.15.0
 pyparsing==3.0.9
 python-http-client==3.3.7
 pytz==2022.6
